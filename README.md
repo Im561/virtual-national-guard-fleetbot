@@ -55,7 +55,8 @@ Use a dedicated service/bot account where possible. Do not post the API key in D
 
 ```env
 DISCORD_TOKEN=your_discord_bot_token
-DISCORD_GUILD_ID=your_discord_server_id
+DISCORD_GUILD_ID=1526321807580463114
+DISCORD_APPLICATION_ID=1533637941275001022
 PHPVMS_BASE_URL=https://virtualnationalguard.com
 PHPVMS_API_KEY=your_phpvms_api_key
 CACHE_TTL_SECONDS=300
