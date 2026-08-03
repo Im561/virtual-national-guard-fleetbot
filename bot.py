@@ -89,7 +89,7 @@ class PhpVmsClient:
                     "X-API-Key": self.api_key,
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "User-Agent": "VirtualNationalGuard-FleetBot/1.0",
+                    "User-Agent": "VirtualNationalGuard-FleetBot/1.0.1",
                 },
             )
 
@@ -154,19 +154,36 @@ class PhpVmsClient:
             raise PhpVmsApiError(f"Could not connect to phpVMS: {exc}") from exc
 
     async def _get_all_pages(self, path: str) -> list[dict[str, Any]]:
+        """Retrieve every page from a phpVMS paginated endpoint.
+
+        phpVMS exposes the current and last page in the response's ``meta``
+        object. Prefer those values over an absolute ``links.next`` URL because
+        customized installations can return the same path for multiple pages.
+        """
         items: list[dict[str, Any]] = []
-        next_url: str | None = path
+        request_target: str = path
         params: dict[str, Any] | None = {"page": 1, "per_page": 100}
-        visited: set[str] = set()
+        visited_requests: set[tuple[str, tuple[tuple[str, str], ...]]] = set()
+        maximum_pages = 500
 
-        while next_url:
-            url_key = self._safe_url(next_url)
-            if url_key in visited:
-                raise PhpVmsApiError("phpVMS pagination loop detected.")
-            visited.add(url_key)
+        for _ in range(maximum_pages):
+            canonical_url = self._safe_url(request_target)
+            parameter_key = tuple(
+                sorted(
+                    (str(key), str(value))
+                    for key, value in (params or {}).items()
+                )
+            )
+            request_key = (canonical_url, parameter_key)
 
-            payload = await self._request_json(next_url, params=params)
-            params = None
+            if request_key in visited_requests:
+                raise PhpVmsApiError(
+                    "phpVMS returned the same pagination request more than once. "
+                    "The server may be ignoring its page parameter."
+                )
+            visited_requests.add(request_key)
+
+            payload = await self._request_json(request_target, params=params)
 
             data = payload.get("data", [])
             if isinstance(data, list):
@@ -174,21 +191,40 @@ class PhpVmsClient:
             elif isinstance(data, dict):
                 items.append(data)
 
-            links = payload.get("links") or {}
-            candidate = links.get("next") if isinstance(links, dict) else None
-            next_url = candidate if isinstance(candidate, str) and candidate else None
-
-            # Some customized phpVMS installations omit links.next but retain meta.
-            if not next_url:
-                meta = payload.get("meta") or {}
-                if isinstance(meta, dict):
+            meta = payload.get("meta")
+            if isinstance(meta, dict):
+                try:
                     current_page = int(meta.get("current_page") or 1)
                     last_page = int(meta.get("last_page") or current_page)
-                    if current_page < last_page:
-                        next_url = path
-                        params = {"page": current_page + 1, "per_page": 100}
+                    per_page = int(meta.get("per_page") or 100)
+                except (TypeError, ValueError) as exc:
+                    raise PhpVmsApiError(
+                        "phpVMS returned invalid pagination metadata."
+                    ) from exc
 
-        return items
+                if current_page < last_page:
+                    request_target = path
+                    params = {
+                        "page": current_page + 1,
+                        "per_page": max(1, min(per_page, 100)),
+                    }
+                    continue
+
+                return items
+
+            # Compatibility fallback for customized endpoints without ``meta``.
+            links = payload.get("links") or {}
+            candidate = links.get("next") if isinstance(links, dict) else None
+            if isinstance(candidate, str) and candidate:
+                request_target = candidate
+                params = None
+                continue
+
+            return items
+
+        raise PhpVmsApiError(
+            f"phpVMS pagination exceeded {maximum_pages} pages."
+        )
 
     async def get_airport(self, icao: str) -> dict[str, Any] | None:
         normalized = normalize(icao)

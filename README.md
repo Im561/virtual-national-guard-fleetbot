@@ -1,5 +1,11 @@
 # Virtual National Guard Fleet Discord Bot
 
+## Version 1.0.1
+
+- Corrected phpVMS pagination handling for fleet and airline endpoints.
+- Page numbers are now tracked with their query parameters, preventing false
+  `pagination loop detected` errors.
+
 Railway-ready Discord bot that reads Virtual National Guard aircraft locations from the phpVMS API.
 
 ## Commands
