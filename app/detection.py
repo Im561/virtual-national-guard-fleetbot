@@ -22,6 +22,7 @@ from .geometry import (
     point_in_geojson_geometry,
     point_in_polygon,
     point_to_great_circle_segment_nm,
+    is_france_region,
     is_us_region,
 )
 from .spatial_index import SpatialGridIndex, coverage_bbox
@@ -30,6 +31,14 @@ from .track_signature import intercept_pair_signature
 ZONES = json.loads((Path(__file__).parent / "data" / "zones.json").read_text(encoding="utf-8"))
 
 SEVERITY_RANK = {"green": 0, "yellow": 1, "orange": 2, "red": 3}
+
+
+def operational_region(lat: float, lon: float) -> str:
+    if is_france_region(lat, lon):
+        return "FRANCE"
+    if is_us_region(lat, lon):
+        return "UNITED STATES"
+    return "CANADA"
 EMERGENCY_SQUAWKS = {"7500", "7600", "7700"}
 INTERCEPT_SQUAWKS = {"7777"}
 # Frequencies that can legitimately be monitored or used for advisory traffic,
@@ -2391,7 +2400,7 @@ class DetectionEngine:
                 target_heading=heading,
                 target_speed_kt=groundspeed,
                 target_altitude_ft=altitude,
-                target_region="UNITED STATES" if is_us_region(lat, lon) else "CANADA",
+                target_region=operational_region(lat, lon),
             ) if intercept_candidate else None
             primary_code = reasons[0]["code"] if reasons else "NORMAL"
             alert_id = self._alert_id(callsign, primary_code)
@@ -2477,7 +2486,7 @@ class DetectionEngine:
                 "manual_nordo": bool(manual_nordo),
                 "manual_nordo_marked_at": manual_nordo.get("marked_at") if manual_nordo else None,
                 "manual_nordo_seconds": manual_nordo_seconds,
-                "region": "UNITED STATES" if is_us_region(lat, lon) else "CANADA",
+                "region": operational_region(lat, lon),
                 "assigned_squawk": assigned_squawk if assigned_squawk != "0000" else None,
                 "aircraft": aircraft,
                 "aircraft_type": aircraft_type,

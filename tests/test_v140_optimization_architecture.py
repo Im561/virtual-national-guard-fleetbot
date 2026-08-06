@@ -131,9 +131,9 @@ def test_unchanged_manual_intercept_skips_recalculation_but_force_recalc_runs():
 
 
 def test_frontend_uses_delta_modules_and_active_workspace_rendering():
-    assert '/static/modules/delta-client.js?v=1.4.8' in INDEX
-    assert '/static/modules/artcc-cache.js?v=1.4.8' in INDEX
-    assert '/static/modules/render-scheduler.js?v=1.4.8' in INDEX
+    assert '/static/modules/delta-client.js?v=1.4.9' in INDEX
+    assert '/static/modules/artcc-cache.js?v=1.4.9' in INDEX
+    assert '/static/modules/render-scheduler.js?v=1.4.9' in INDEX
     assert "data?.type === 'delta'" in JS
     assert "VngRenderScheduler?.mark('map', 'intercept', 'atc')" in JS
     assert "if (state.workspaceTab === 'map')" in JS

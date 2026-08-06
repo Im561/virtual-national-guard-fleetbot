@@ -388,8 +388,15 @@ class AtcBoundaryStore:
                 "PAZA", "PHZH", "PGZU", "TJZS", "SCT", "N90", "A80", "D10", "F11", "NCT", "PCT"
             }
             is_canada_boundary = boundary_id.startswith("CZ")
-            is_supported_boundary = is_us_boundary or (settings.monitor_canada and is_canada_boundary)
-            if center and not is_enabled_region(center[0], center[1], settings.monitor_canada) and not is_supported_boundary:
+            is_france_boundary = boundary_id.startswith("LF")
+            is_supported_boundary = (
+                is_us_boundary
+                or (settings.monitor_canada and is_canada_boundary)
+                or (settings.monitor_france and is_france_boundary)
+            )
+            if center and not is_enabled_region(
+                center[0], center[1], settings.monitor_canada, settings.monitor_france
+            ) and not is_supported_boundary:
                 continue
             if not center and not is_supported_boundary:
                 continue

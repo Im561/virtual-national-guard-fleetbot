@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from .geometry import destination_point, haversine_nm, initial_bearing_deg, is_canada_region, is_us_region
+from .geometry import destination_point, haversine_nm, initial_bearing_deg, is_canada_region, is_france_region, is_us_region
 
 DATA_PATH = Path(__file__).parent / 'data' / 'bases.json'
 
@@ -21,6 +21,8 @@ AIRCRAFT_SPEED_KT = {
     'F16': 720,
     'F35': 750,
     'F18H': 780,
+    'RAFALE': 800,
+    'M2K': 760,
 }
 
 
@@ -110,10 +112,14 @@ def recommend_base(
         allow_cross_border = settings.allow_cross_border_qra_recommendations
 
     normalized_region = str(target_region or '').upper()
-    if normalized_region:
-        desired_country = 'CANADA' if normalized_region == 'CANADA' else 'UNITED STATES'
+    if normalized_region in {'CANADA', 'FRANCE', 'UNITED STATES'}:
+        desired_country = normalized_region
+    elif is_france_region(lat, lon):
+        desired_country = 'FRANCE'
+    elif is_canada_region(lat, lon) and not is_us_region(lat, lon):
+        desired_country = 'CANADA'
     else:
-        desired_country = 'CANADA' if is_canada_region(lat, lon) and not is_us_region(lat, lon) else 'UNITED STATES'
+        desired_country = 'UNITED STATES'
     candidates: list[dict[str, Any]] = []
     for base in BASES:
         if not base.get('scramble_enabled', False):

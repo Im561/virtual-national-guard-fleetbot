@@ -107,7 +107,7 @@
       "F18H",
       "F35"
     ],
-    "unit": "RCAF Primary QRA Base \u00b7 NORAD",
+    "unit": "RCAF Primary QRA Base · NORAD",
     "country": "CANADA",
     "qra_role": "PRIMARY",
     "scramble_enabled": true
@@ -121,7 +121,7 @@
       "F18H",
       "F35"
     ],
-    "unit": "RCAF Primary QRA Base \u00b7 NORAD",
+    "unit": "RCAF Primary QRA Base · NORAD",
     "country": "CANADA",
     "qra_role": "PRIMARY",
     "scramble_enabled": true
@@ -186,7 +186,7 @@
     "aircraft": [
       "B2"
     ],
-    "unit": "Bomber unit \u2014 excluded from alert scramble",
+    "unit": "Bomber unit — excluded from alert scramble",
     "scramble_enabled": false
   },
   {
@@ -266,5 +266,225 @@
     ],
     "unit": "28th Expeditionary Combat Aviation Brigade",
     "scramble_enabled": false
+  },
+  {
+    "icao": "LFSI",
+    "name": "Saint-Dizier – Robinson Air Base",
+    "lat": 48.636,
+    "lon": 4.8994,
+    "aircraft": [
+      "RAFALE"
+    ],
+    "unit": "BA 113 · French Air and Space Force QRA",
+    "country": "FRANCE",
+    "qra_role": "PRIMARY",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFSN",
+    "name": "Nancy – Ochey Air Base",
+    "lat": 48.5831,
+    "lon": 5.955,
+    "aircraft": [
+      "M2K"
+    ],
+    "unit": "BA 133 · French Air and Space Force QRA",
+    "country": "FRANCE",
+    "qra_role": "PRIMARY",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFSX",
+    "name": "Luxeuil – Saint-Sauveur Air Base",
+    "lat": 47.7831,
+    "lon": 6.3642,
+    "aircraft": [
+      "M2K"
+    ],
+    "unit": "BA 116 · French Air and Space Force QRA",
+    "country": "FRANCE",
+    "qra_role": "PRIMARY",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFBM",
+    "name": "Mont-de-Marsan Air Base",
+    "lat": 43.9117,
+    "lon": -0.5075,
+    "aircraft": [
+      "RAFALE"
+    ],
+    "unit": "BA 118 · French Air and Space Force QRA",
+    "country": "FRANCE",
+    "qra_role": "PRIMARY",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFMO",
+    "name": "Orange – Caritat Air Base",
+    "lat": 44.1405,
+    "lon": 4.8667,
+    "aircraft": [
+      "M2K"
+    ],
+    "unit": "BA 115 · French Air and Space Force QRA",
+    "country": "FRANCE",
+    "qra_role": "PRIMARY",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFKJ",
+    "name": "Solenzara Air Base",
+    "lat": 41.9244,
+    "lon": 9.406,
+    "aircraft": [
+      "RAFALE",
+      "M2K"
+    ],
+    "unit": "BA 126 · Corsica QRA / forward detachment",
+    "country": "FRANCE",
+    "qra_role": "FOL",
+    "base_type": "FIGHTER",
+    "scramble_enabled": true,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFOE",
+    "name": "Évreux – Fauville Air Base",
+    "lat": 49.0287,
+    "lon": 1.2199,
+    "aircraft": [
+      "A400M",
+      "C130",
+      "C160"
+    ],
+    "unit": "BA 105 · Transport support",
+    "country": "FRANCE",
+    "base_type": "TRANSPORT",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFPV",
+    "name": "Vélizy – Villacoublay Air Base",
+    "lat": 48.7742,
+    "lon": 2.1917,
+    "aircraft": [
+      "VIP"
+    ],
+    "unit": "BA 107 · VIP / government transport",
+    "country": "FRANCE",
+    "base_type": "VIP",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFOJ",
+    "name": "Orléans – Bricy Air Base",
+    "lat": 47.9878,
+    "lon": 1.7606,
+    "aircraft": [
+      "A400M",
+      "C130"
+    ],
+    "unit": "BA 123 · Transport support",
+    "country": "FRANCE",
+    "base_type": "TRANSPORT",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFOA",
+    "name": "Avord Air Base",
+    "lat": 47.0533,
+    "lon": 2.6325,
+    "aircraft": [
+      "AWACS"
+    ],
+    "unit": "BA 702 · AWACS / ISR support",
+    "country": "FRANCE",
+    "base_type": "AWACS",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFDN",
+    "name": "Cognac – Châteaubernard Air Base",
+    "lat": 45.6583,
+    "lon": -0.3175,
+    "aircraft": [
+      "TRAINER"
+    ],
+    "unit": "BA 709 · Training support",
+    "country": "FRANCE",
+    "base_type": "TRAINING",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFBD",
+    "name": "Bordeaux – Mérignac Air Base",
+    "lat": 44.8283,
+    "lon": -0.7156,
+    "aircraft": [
+      "TRANSPORT"
+    ],
+    "unit": "BA 106 · Transport support",
+    "country": "FRANCE",
+    "base_type": "TRANSPORT",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFBC",
+    "name": "Cazaux Air Base",
+    "lat": 44.5333,
+    "lon": -1.125,
+    "aircraft": [
+      "TRAINER"
+    ],
+    "unit": "BA 120 · Training support",
+    "country": "FRANCE",
+    "base_type": "TRAINING",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFMI",
+    "name": "Istres – Le Tubé Air Base",
+    "lat": 43.5227,
+    "lon": 4.9238,
+    "aircraft": [
+      "A330MRTT"
+    ],
+    "unit": "BA 125 · Tanker / AAR support",
+    "country": "FRANCE",
+    "base_type": "TANKER",
+    "scramble_enabled": false,
+    "display_enabled": true
+  },
+  {
+    "icao": "LFMY",
+    "name": "Salon-de-Provence Air Base",
+    "lat": 43.6064,
+    "lon": 5.1093,
+    "aircraft": [
+      "TRAINER"
+    ],
+    "unit": "BA 701 · Training support",
+    "country": "FRANCE",
+    "base_type": "TRAINING",
+    "scramble_enabled": false,
+    "display_enabled": true
   }
 ]

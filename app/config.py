@@ -13,6 +13,7 @@ class Settings(BaseSettings):
     poll_seconds: int = 10
     http_fallback_seconds: int = 15
     monitor_canada: bool = True
+    monitor_france: bool = True
     enable_live_deltas: bool = True
     delta_full_snapshot_interval: int = 30
     spatial_grid_degrees: float = 5.0
@@ -28,7 +29,7 @@ class Settings(BaseSettings):
     sua_feature_url: str = "https://services6.arcgis.com/ssFJjBXIUyZDrSYZ/ArcGIS/rest/services/Special_Use_Airspace/FeatureServer/0"
     sua_refresh_seconds: int = 21600
     canada_airspace_index_url: str = "https://soaringweb.org/Airspace/NA/HomePage.html"
-    user_agent: str = "VNG-ADOC/1.4.8 contact=operator@example.invalid"
+    user_agent: str = "VNG-ADOC/1.4.9 contact=operator@example.invalid"
 
     center_coverage_radius_nm: float = 350.0
     approach_coverage_radius_nm: float = 100.0

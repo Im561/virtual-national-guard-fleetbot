@@ -36,6 +36,6 @@ def test_atc_and_click_popup_restore_radio_and_squawk_details():
 
 
 def test_v145_identity():
-    assert 'data-build="1.4.8"' in HTML
-    assert 'APP_VERSION = "1.4.8"' in MAIN
-    assert 'UI_BUILD_ID = "v1.4.8-deep-audit-reliability"' in MAIN
+    assert 'data-build="1.4.9"' in HTML
+    assert 'APP_VERSION = "1.4.9"' in MAIN
+    assert 'UI_BUILD_ID = "v1.4.9-france-operational-coverage"' in MAIN

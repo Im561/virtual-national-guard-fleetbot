@@ -199,15 +199,31 @@ def is_canada_region(lat: float, lon: float) -> bool:
     return mainland_and_arctic or newfoundland_labrador
 
 
+def is_france_region(lat: float, lon: float) -> bool:
+    """Return True for metropolitan France and Corsica using a conservative outline."""
+    mainland_outline = [
+        [-5.6, 48.7], [-4.8, 47.7], [-2.2, 46.0], [-1.8, 43.2],
+        [0.8, 42.3], [3.2, 42.3], [7.6, 43.5], [7.7, 48.8],
+        [6.2, 49.8], [4.2, 50.3], [2.4, 51.1], [-1.8, 49.8],
+    ]
+    corsica_outline = [[8.4, 41.2], [9.7, 41.2], [9.7, 43.2], [8.4, 43.2]]
+    return point_in_polygon(lat, lon, mainland_outline) or point_in_polygon(lat, lon, corsica_outline)
+
+
 def is_monitored_region(lat: float, lon: float) -> bool:
-    """Return True for the United States, its territories, or Canada."""
-    return is_us_region(lat, lon) or is_canada_region(lat, lon)
+    """Return True for the United States, Canada, or metropolitan France."""
+    return is_us_region(lat, lon) or is_canada_region(lat, lon) or is_france_region(lat, lon)
 
 
-def is_enabled_region(lat: float, lon: float, monitor_canada: bool = False) -> bool:
-    """Return True for the configured monitoring region.
-
-    Canada remains available behind an environment flag, but v0.5 defaults to
-    the United States because Canada monitoring was placed on hold.
-    """
-    return is_us_region(lat, lon) or (monitor_canada and is_canada_region(lat, lon))
+def is_enabled_region(
+    lat: float,
+    lon: float,
+    monitor_canada: bool = False,
+    monitor_france: bool = False,
+) -> bool:
+    """Return True for an enabled operational monitoring region."""
+    return (
+        is_us_region(lat, lon)
+        or (monitor_canada and is_canada_region(lat, lon))
+        or (monitor_france and is_france_region(lat, lon))
+    )

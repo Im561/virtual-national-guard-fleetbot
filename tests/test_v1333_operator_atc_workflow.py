@@ -36,7 +36,7 @@ def test_v1333_operator_and_atc_workflows_are_present_and_wired():
     assert "data-atc-open-intercept" in js
     assert ".atc-quick-summary" in css
     assert "#atc-map" in css
-    assert 'APP_VERSION = "1.4.8"' in main
+    assert 'APP_VERSION = "1.4.9"' in main
     assert '"version": APP_VERSION' in main
 
 

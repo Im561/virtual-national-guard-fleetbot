@@ -40,6 +40,6 @@ def test_dca_reference_overlay_and_blackjack_ui_are_wired():
     assert "SPECIAL UNIT" in JS and "MISSION ROLE" in JS
     assert ".dca-heli-map-label" in CSS
     assert ".scope-tag.vsoa.blackjack" in CSS
-    assert 'UI_BUILD_ID = "v1.4.8-deep-audit-reliability"' in MAIN
+    assert 'UI_BUILD_ID = "v1.4.9-france-operational-coverage"' in MAIN
     assert '"blackjack_recognition": True' in MAIN
     assert '"dca_heli_route_reference": True' in MAIN

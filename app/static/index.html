@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-build="1.4.8">
+<html lang="en" data-build="1.4.9">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -7,13 +7,13 @@
   <link rel="preconnect" href="https://unpkg.com" />
   <link rel="preconnect" href="https://server.arcgisonline.com" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-  <link rel="stylesheet" href="/static/styles.css?v=1.4.8" />
+  <link rel="stylesheet" href="/static/styles.css?v=1.4.9" />
 </head>
 <body>
   <div class="shell">
     <header class="topbar">
       <div class="brand-block">
-        <img class="header-logo" src="/static/assets/vatsim-special-operations-logo.png?v=1.4.8" alt="VATSIM Special Operations Virtual National Guard Bureau emblem" />
+        <img class="header-logo" src="/static/assets/vatsim-special-operations-logo.png?v=1.4.9" alt="VATSIM Special Operations Virtual National Guard Bureau emblem" />
         <div>
           <div class="eyebrow">VIRTUAL NATIONAL GUARD</div>
           <h1>AIR DEFENSE OPERATIONS CENTER</h1>
@@ -98,8 +98,13 @@
                 <button class="region" data-region="hawaii">HAWAII</button>
                 <button class="region" data-region="territories">TERRITORIES</button>
                 <button class="region" data-region="canada">CANADA</button>
+                <button class="region" data-region="france">FRANCE</button>
                 <button class="region" data-region="all-us">ALL U.S.</button>
                 <button class="region" data-region="north-america">U.S. + CANADA</button>
+                <span class="map-menu-label operational-filter-label">OPERATIONAL FILTER</span>
+                <button class="region-filter active" data-region-filter="all">ALL COVERAGE</button>
+                <button class="region-filter" data-region-filter="north-america">U.S. + CANADA</button>
+                <button class="region-filter" data-region-filter="france">FRANCE ONLY</button>
               </div>
               <div id="map-menu-tools" class="map-menu-panel" data-map-menu-panel="tools" hidden>
                 <span class="map-menu-label">DISPLAY</span>
@@ -131,6 +136,8 @@
           <span><i class="legend-line filed-route"></i>FILED ENDPOINT PATH</span>
           <span><i class="legend-base"></i>U.S. FIGHTER BASE</span>
           <span><i class="legend-base rcaf"></i>RCAF QRA / NORAD FOL</span>
+          <span><i class="legend-base france-qra"></i>FRANCE QRA</span>
+          <span><i class="legend-base france-support"></i>FRANCE SUPPORT BASE</span>
           <span class="dca-heli-legend" hidden><i class="legend-line dca-heli"></i>DCA HELICOPTER ROUTE REFERENCE</span>
           <span class="dca-heli-legend" hidden><i class="legend-line dca-heli-closed"></i>CLOSED ROUTE SEGMENT</span>
         </div>
@@ -295,7 +302,7 @@
       <div><span class="footer-label">SUA</span><span id="sua-status">LOADING</span></div>
       <div><span class="footer-label">MODE</span><span id="operating-mode">LIVE UNITED STATES</span> · SIMULATION ONLY</div>
       <div id="deployment-warning" class="deployment-warning" hidden role="alert"></div>
-      <div><span class="footer-label">BUILD</span><span id="build-version">v1.4.8</span></div>
+      <div><span class="footer-label">BUILD</span><span id="build-version">v1.4.9</span></div>
       <div class="footer-viewers" title="Unique browser consoles currently connected; multiple tabs from the same browser count once."><span class="viewer-live-dot" aria-hidden="true"></span><span class="footer-label">VIEWERS</span><span id="viewer-count">—</span></div>
     </footer>
   </div>
@@ -357,9 +364,9 @@
   </div>
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="/static/modules/delta-client.js?v=1.4.8"></script>
-  <script src="/static/modules/artcc-cache.js?v=1.4.8"></script>
-  <script src="/static/modules/render-scheduler.js?v=1.4.8"></script>
-  <script src="/static/app.js?v=1.4.8"></script>
+  <script src="/static/modules/delta-client.js?v=1.4.9"></script>
+  <script src="/static/modules/artcc-cache.js?v=1.4.9"></script>
+  <script src="/static/modules/render-scheduler.js?v=1.4.9"></script>
+  <script src="/static/app.js?v=1.4.9"></script>
 </body>
 </html>

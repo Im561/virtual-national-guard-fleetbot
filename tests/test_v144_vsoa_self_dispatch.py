@@ -41,7 +41,7 @@ def test_atc_map_shows_operator_aircraft_and_pending_assignment_route():
 
 
 def test_v144_deployment_identity():
-    assert 'data-build="1.4.8"' in INDEX
-    assert "v1.4.8" in INDEX
-    assert 'APP_VERSION = "1.4.8"' in MAIN
-    assert 'UI_BUILD_ID = "v1.4.8-deep-audit-reliability"' in MAIN
+    assert 'data-build="1.4.9"' in INDEX
+    assert "v1.4.9" in INDEX
+    assert 'APP_VERSION = "1.4.9"' in MAIN
+    assert 'UI_BUILD_ID = "v1.4.9-france-operational-coverage"' in MAIN

@@ -19,6 +19,7 @@ const state = {
   selectedOperationId: null,
   bases: [],
   filter: 'all',
+  operationalRegionFilter: 'all',
   basemap: 'dark-satellite',
   atcCoverageData: [],
   centerBoundaryData: [],
@@ -329,8 +330,9 @@ function buildFocusedDashboardData(raw) {
   const stats = {
     ...(raw.stats || {}),
     monitored_aircraft: pilots.length,
-    us_aircraft: pilots.filter(item => item.region !== 'CANADA').length,
+    us_aircraft: pilots.filter(item => item.region === 'UNITED STATES').length,
     canada_aircraft: pilots.filter(item => item.region === 'CANADA').length,
+    france_aircraft: pilots.filter(item => item.region === 'FRANCE').length,
     centers_online: controllers.filter(item => item.facility === 'CTR').length,
     terminal_online: controllers.filter(item => ['APP','DEP','TWR','GND','DEL'].includes(item.facility)).length,
     alerts: alerts.length,
@@ -2005,6 +2007,7 @@ const regionViews = {
   hawaii: { center: [20.8, -157.4], zoom: 6 },
   territories: { bounds: [[-15.5, -173], [22.5, 147]] },
   canada: { center: [57.0, -106.0], zoom: 3 },
+  france: { bounds: [[41.0, -5.8], [51.5, 9.8]] },
   'all-us': { bounds: [[-15.5, -180], [72.5, 147]] },
   'north-america': { bounds: [[17.0, -170.0], [84.5, -45.0]] },
 };
@@ -2016,6 +2019,34 @@ function setRegionView(name) {
   });
   if (view.bounds) map.fitBounds(view.bounds, { padding: [18, 18], animate: false });
   else map.setView(view.center, view.zoom, { animate: false });
+}
+
+function operationalRegionOf(item) {
+  const explicit = String(item?.region || item?.country || '').toUpperCase();
+  if (explicit) return explicit;
+  const boundary = String(item?.boundary_id || item?.parent_boundary_id || item?.callsign || '').toUpperCase();
+  if (boundary.startsWith('LF')) return 'FRANCE';
+  if (boundary.startsWith('CZ')) return 'CANADA';
+  return 'UNITED STATES';
+}
+
+function matchesOperationalRegion(item) {
+  const region = operationalRegionOf(item);
+  if (state.operationalRegionFilter === 'france') return region === 'FRANCE';
+  if (state.operationalRegionFilter === 'north-america') return region !== 'FRANCE';
+  return true;
+}
+
+function setOperationalRegionFilter(name) {
+  state.operationalRegionFilter = ['all', 'north-america', 'france'].includes(name) ? name : 'all';
+  document.querySelectorAll('.region-filter').forEach(button => {
+    const active = button.dataset.regionFilter === state.operationalRegionFilter;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  renderAircraft(state.data?.pilots || [], true);
+  renderBases(state.bases || [], true);
+  if (state.atcCoverageData.length) renderAtcCoverage(state.atcCoverageData, state.atcRevision, true);
 }
 
 function tickClock() {
@@ -2545,7 +2576,8 @@ function renderAircraft(pilots, forceIcons = false) {
     for (const pilot of viewPilots) {
       active.add(pilot.callsign);
       updateAircraftTrackHistory(pilot);
-      const visible = state.filter === 'all' || pilot.severity !== 'green' || pilot.active_intercept || Boolean(pilot.nordo_watch);
+      const regionVisible = matchesOperationalRegion(pilot);
+      const visible = regionVisible && (state.filter === 'all' || pilot.severity !== 'green' || pilot.active_intercept || Boolean(pilot.nordo_watch));
       let record = aircraftLayers.get(pilot.callsign);
       if (!record) {
         const marker = L.marker([pilot.lat, pilot.lon], {
@@ -2602,20 +2634,22 @@ function renderAircraft(pilots, forceIcons = false) {
 
     const atcCount = state.data?.stats?.centers_online || 0;
     const canadaCount = state.data?.stats?.canada_aircraft || 0;
+    const franceCount = state.data?.stats?.france_aircraft || 0;
     const focus = state.data?._artcc_focus;
     el('map-summary').textContent = focus
       ? `${focus.code} · ${pilots.length} RELEVANT TRACKS · ${focus.inside} INSIDE · ${focus.inbound} INBOUND · ${atcCount} CENTER POSITION${atcCount === 1 ? '' : 'S'}`
-      : `${pilots.length} AIR TRACKS · ${canadaCount} CANADA · ${atcCount} CENTERS`;
+      : `${pilots.length} AIR TRACKS · ${canadaCount} CANADA · ${franceCount} FRANCE · ${atcCount} CENTERS`;
     updateArtccFocusControls();
     state.renderFrame = null;
   });
 }
 
 function baseIcon(base) {
-  const isCanada = String(base?.country || '').toUpperCase() === 'CANADA';
+  const country = String(base?.country || 'UNITED STATES').toUpperCase();
   const role = String(base?.qra_role || '').toLowerCase();
   const classes = ['base-marker'];
-  if (isCanada) classes.push('rcaf');
+  if (country === 'CANADA') classes.push('rcaf');
+  if (country === 'FRANCE') classes.push('france-base', base.scramble_enabled ? 'france-qra' : 'france-support', `type-${String(base.base_type || 'support').toLowerCase()}`);
   if (role === 'primary') classes.push('primary-qra');
   if (role === 'fol') classes.push('norad-fol');
   return L.divIcon({
@@ -2626,16 +2660,27 @@ function baseIcon(base) {
   });
 }
 
-function renderBases(bases) {
+function franceBaseRole(base) {
+  if (base.scramble_enabled) return base.qra_role === 'FOL' ? 'QRA FORWARD DETACHMENT' : 'QRA FIGHTER BASE';
+  return `${String(base.base_type || 'SUPPORT').replaceAll('_', ' ')} SUPPORT BASE`;
+}
+
+function renderBases(bases, force = false) {
   state.bases = bases || [];
-  if (baseLayers.length) return;
-  for (const base of bases.filter(item => item.scramble_enabled)) {
-    const role = base.qra_role === 'FOL' ? 'NORAD FORWARD OPERATING LOCATION' : base.qra_role === 'PRIMARY' ? 'PRIMARY QRA BASE' : 'FIGHTER BASE';
+  if (force || baseLayers.length) {
+    for (const record of baseLayers.splice(0)) map.removeLayer(record.marker || record);
+  }
+  for (const base of state.bases.filter(item => item.scramble_enabled || item.display_enabled)) {
+    if (!matchesOperationalRegion(base)) continue;
+    const role = String(base.country || '').toUpperCase() === 'FRANCE'
+      ? franceBaseRole(base)
+      : base.qra_role === 'FOL' ? 'NORAD FORWARD OPERATING LOCATION' : base.qra_role === 'PRIMARY' ? 'PRIMARY QRA BASE' : 'FIGHTER BASE';
     const nation = base.country ? `<div>${escapeHtml(base.country)} · ${escapeHtml(role)}</div>` : '';
-    const marker = L.marker([base.lat, base.lon], { icon: baseIcon(base), zIndexOffset: 500 })
-      .bindPopup(`<div class="popup-call">${escapeHtml(base.icao)}</div><div>${escapeHtml(base.name)}</div>${nation}<div>AIRCRAFT: ${escapeHtml(base.aircraft.join(' / '))}</div><div>${escapeHtml(base.unit)}</div>`, { ...safePopupOptions, className: 'tactical-popup' })
+    const status = base.scramble_enabled ? '<div>QRA LAUNCH ELIGIBLE</div>' : '<div>SUPPORT / DISPLAY ONLY</div>';
+    const marker = L.marker([base.lat, base.lon], { icon: baseIcon(base), zIndexOffset: base.scramble_enabled ? 520 : 420 })
+      .bindPopup(`<div class="popup-call">${escapeHtml(base.icao)}</div><div>${escapeHtml(base.name)}</div>${nation}${status}<div>AIRCRAFT: ${escapeHtml((base.aircraft || []).join(' / '))}</div><div>${escapeHtml(base.unit || '')}</div>`, { ...safePopupOptions, className: 'tactical-popup' })
       .addTo(map);
-    baseLayers.push(marker);
+    baseLayers.push({ marker, base });
   }
 }
 
@@ -3157,7 +3202,7 @@ function renderAtcCoverage(coverage, revision, force = false) {
   if (atcLayerGroup) map.removeLayer(atcLayerGroup);
   atcLabelMarkers = [];
   const layers = [];
-  const visibleCoverage = (coverage || []).filter(item => atcCoverageRelevantToArtcc(item));
+  const visibleCoverage = (coverage || []).filter(item => atcCoverageRelevantToArtcc(item) && matchesOperationalRegion(item));
   for (const item of visibleCoverage) {
     let layer = null;
     let halo = null;
@@ -4880,6 +4925,7 @@ document.querySelectorAll('.filter').forEach(button => button.addEventListener('
   renderAircraft(state.data?.pilots || [], true);
 }));
 document.querySelectorAll('.region').forEach(button => button.addEventListener('click', () => setRegionView(button.dataset.region)));
+document.querySelectorAll('.region-filter').forEach(button => button.addEventListener('click', () => setOperationalRegionFilter(button.dataset.regionFilter)));
 document.querySelectorAll('.icon-mode').forEach(button => button.addEventListener('click', () => setIconMode(button.dataset.mode)));
 el('toggle-atc').addEventListener('click', toggleAtcCoverage);
 el('toggle-sua').addEventListener('click', toggleSua);

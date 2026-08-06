@@ -115,6 +115,7 @@ class LiveState:
         return {
             "us_aircraft": sum(1 for p in self.pilots if p.get("region") == "UNITED STATES"),
             "canada_aircraft": sum(1 for p in self.pilots if p.get("region") == "CANADA"),
+            "france_aircraft": sum(1 for p in self.pilots if p.get("region") == "FRANCE"),
             "monitored_aircraft": len(self.pilots),
             "centers_online": sum(1 for c in self.atc_coverage if c.get("facility") == "CTR"),
             "terminal_online": sum(1 for c in self.atc_coverage if c.get("facility") in {"APP", "DEP", "TWR", "GND", "DEL"}),
@@ -2045,6 +2046,7 @@ class VatsimMonitor:
                 float(pilot["latitude"]),
                 float(pilot["longitude"]),
                 settings.monitor_canada,
+                settings.monitor_france,
             )
         ]
 

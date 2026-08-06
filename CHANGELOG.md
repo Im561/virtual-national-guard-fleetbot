@@ -1,3 +1,9 @@
+# v1.4.9 France operational coverage
+
+- Adds metropolitan France and Corsica as an enabled operational region.
+- Adds French QRA and support base networking from the supplied reference.
+- No broader EU or NATO regions are enabled.
+
 # Changelog
 
 ## v1.4.8 — Deep reliability audit and pre-scramble denial

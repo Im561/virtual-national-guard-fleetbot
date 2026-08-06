@@ -24,7 +24,7 @@ def test_fighter_and_helicopter_designators_are_recognized():
 def test_exact_user_logo_is_bundled_in_upper_left_brand_block():
     assert LOGO.exists()
     assert LOGO.stat().st_size > 50_000
-    assert "/static/assets/vatsim-special-operations-logo.png?v=1.4.8" in INDEX
+    assert "/static/assets/vatsim-special-operations-logo.png?v=1.4.9" in INDEX
     brand_start = INDEX.index('<div class="brand-block">')
     logo_index = INDEX.index('class="header-logo"', brand_start)
     title_index = INDEX.index('AIR DEFENSE OPERATIONS CENTER', brand_start)

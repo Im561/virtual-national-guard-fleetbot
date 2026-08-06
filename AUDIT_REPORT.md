@@ -1,3 +1,9 @@
+# v1.4.9 France operational coverage
+
+- Adds metropolitan France and Corsica as an enabled operational region.
+- Adds French QRA and support base networking from the supplied reference.
+- No broader EU or NATO regions are enabled.
+
 # VNG ADOC v1.4.8 Deep Audit
 
 ## Confirmed defects repaired
@@ -179,3 +185,15 @@ The audit environment could not resolve public VATSIM and supporting data hosts,
 - Dismissal metadata is shared and persisted; the underlying communications watch remains visible.
 - Python compilation and JavaScript syntax checks passed.
 - 191 automated tests passed.
+
+## v1.4.9 validation
+
+- 220 automated tests passed.
+- Python compilation passed for application and tests.
+- JavaScript syntax validation passed.
+- Runtime smoke checks passed for `/`, `/health`, `/api/version`, `/api/bootstrap`, and `/api/bases`.
+- Bootstrap exposes 15 French bases: 6 QRA launch bases and 9 support/display bases.
+- France QRA recommendations remain inside the French national network unless cross-border recommendations are explicitly enabled.
+- Metropolitan France, Corsica, French FIR identifiers, and France-only client filtering are covered.
+- French AFIS/A-A/INFO/CTAF advisory-frequency safeguards were generated from current OurAirports CSV data.
+- External VATSIM DNS was unavailable in the local runtime smoke environment; the service reported degraded feed state rather than presenting stale data as live.

@@ -23,8 +23,8 @@ from .vatsim import VatsimMonitor
 logging.basicConfig(level=logging.INFO, format="%(asctime)s | %(levelname)s | %(name)s | %(message)s")
 
 STATIC = Path(__file__).parent / "static"
-APP_VERSION = "1.4.8"
-UI_BUILD_ID = "v1.4.8-deep-audit-reliability"
+APP_VERSION = "1.4.9"
+UI_BUILD_ID = "v1.4.9-france-operational-coverage"
 
 
 class ConnectionManager:
@@ -260,6 +260,8 @@ async def version_info() -> JSONResponse:
             "compact_docked_map_menu": True,
             "scope_hud_removed": True,
             "pre_scramble_denial_window_seconds": settings.pre_scramble_warning_seconds,
+            "france_operational_coverage": settings.monitor_france,
+            "france_qra_bases": sum(1 for base in BASES if base.get("country") == "FRANCE" and base.get("scramble_enabled")),
         },
         headers={"Cache-Control": "no-store"},
     )
@@ -314,6 +316,7 @@ async def bootstrap() -> JSONResponse:
             "boundary_status": monitor.state.boundary_status,
             "sua_status": monitor.state.sua_status,
             "monitor_canada": settings.monitor_canada,
+            "monitor_france": settings.monitor_france,
             "poll_seconds": settings.poll_seconds,
             "http_fallback_seconds": settings.http_fallback_seconds,
             "feed_stale_warning_seconds": settings.feed_stale_warning_seconds,

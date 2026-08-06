@@ -765,3 +765,18 @@ body.intercept-console-open{overflow:hidden}
   .map-menu-panel{display:grid;grid-template-columns:1fr}
   .map-menu-label{margin-top:2px}
 }
+
+
+/* v1.4.9 France operational coverage */
+.base-marker.france-base{border-color:#4ea7ff;background:rgba(78,167,255,.24);box-shadow:0 0 9px rgba(78,167,255,.65)}
+.base-marker.france-qra::after{content:'';position:absolute;inset:3px;border:1px solid #fff;background:rgba(255,255,255,.12)}
+.base-marker.france-qra.norad-fol{border-style:dashed;background:rgba(78,167,255,.12)}
+.base-marker.france-support{width:12px;height:12px;margin:4px;border-color:#23c7a6;background:rgba(35,199,166,.20);box-shadow:0 0 6px rgba(35,199,166,.45)}
+.base-marker.france-support.type-training{border-color:#2e8bc0;background:rgba(46,139,192,.22)}
+.base-marker.france-support.type-tanker{border-color:#9b59b6;background:rgba(155,89,182,.24)}
+.base-marker.france-support.type-awacs{border-color:#e67e22;background:rgba(230,126,34,.24)}
+.base-marker.france-support.type-vip{border-color:#95a5a6;background:rgba(149,165,166,.24)}
+.legend-base.france-qra{border-color:#4ea7ff;background:rgba(78,167,255,.28);box-shadow:0 0 5px rgba(78,167,255,.5)}
+.legend-base.france-support{width:8px;height:8px;border-color:#23c7a6;background:rgba(35,199,166,.24)}
+.operational-filter-label{flex-basis:100%;margin-top:5px}
+.region-filter.active{border-color:#4ea7ff;color:#d8ecff;background:rgba(78,167,255,.16)}

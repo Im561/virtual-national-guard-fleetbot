@@ -1,4 +1,10 @@
-# VNG Air Defense Operations Center v1.4.8
+# v1.4.9 France operational coverage
+
+- Adds metropolitan France and Corsica as an enabled operational region.
+- Adds French QRA and support base networking from the supplied reference.
+- No broader EU or NATO regions are enabled.
+
+# VNG Air Defense Operations Center v1.4.9
 
 ## v1.4.8 reliability and pre-scramble review
 
@@ -65,8 +71,8 @@ Attach a Railway volume at `/app/data` and set `STATE_DB_PATH=/app/data/vng_adoc
 
 After Railway completes the deployment, verify these items before using the console:
 
-1. The bottom status bar shows `BUILD v1.4.8`.
-2. `/api/version` returns `live_deltas: true`, `persistent_workflow: true`, and `spatial_index: true`.
+1. The bottom status bar shows `BUILD v1.4.9`.
+2. `/api/version` returns `france_operational_coverage: true`, `france_qra_bases: 6`, `live_deltas: true`, and `persistent_workflow: true`.
 3. `/health` includes `processing_breakdown`.
 4. The map toolbar displays `ARTCC FOCUS`, and the right rail has no Track / Intercept Data panel.
 

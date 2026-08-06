@@ -32,6 +32,19 @@ FALLBACK_AIRPORTS: dict[str, tuple[float, float, str]] = {
     "KOZR": (31.2757, -85.7134, "Cairns AAF"), "KSZL": (38.7303, -93.5482, "Whiteman"),
 }
 
+# Keep route/departure calculations available for configured operational bases
+# even when the external airport API is temporarily unreachable.
+try:
+    for _base in json.loads((Path(__file__).parent / "data" / "bases.json").read_text(encoding="utf-8")):
+        _icao = str(_base.get("icao") or "").upper()
+        if _icao and _base.get("lat") is not None and _base.get("lon") is not None:
+            FALLBACK_AIRPORTS.setdefault(
+                _icao,
+                (float(_base["lat"]), float(_base["lon"]), str(_base.get("name") or _icao)),
+            )
+except (OSError, ValueError, TypeError):
+    pass
+
 
 class AirportResolver:
     def __init__(self) -> None:

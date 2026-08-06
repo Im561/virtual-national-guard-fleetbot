@@ -32,7 +32,7 @@ def test_single_artcc_focus_is_present_and_drives_the_dashboard():
     assert "renderCenterBoundaries(state.centerBoundaryData" in js
     assert "renderAtcCoverage(state.atcCoverageData" in js
     assert ".artcc-focus-status.active" in css
-    assert 'APP_VERSION = "1.4.8"' in main
+    assert 'APP_VERSION = "1.4.9"' in main
 
 
 def test_artcc_focus_retains_intercept_relationships_and_recalculates_counts():
