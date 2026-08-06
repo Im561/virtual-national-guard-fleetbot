@@ -1,0 +1,21 @@
+VNG ADOC v1.4.8
+UI build: v1.4.8-deep-audit-reliability
+
+Implemented:
+- Serialized WebSocket live broadcasts so revisions cannot overlap or arrive out of order.
+- New consoles receive a full compact baseline before presence messages and deltas.
+- Keyed live deltas now preserve server-defined collection ordering.
+- Modal keyboard focus and close/restore behavior were hardened.
+- Leaflet CDN resources now use integrity metadata.
+- Added a shared 30-second pre-scramble review strip with a manual DENY AUTO ALERT control.
+- A denial suppresses only the current automatic communications-mismatch escalation; monitoring remains active.
+- Manual NORDO and emergency-squawk alerts continue immediately and are not suppressed by the deny control.
+- Denials are case-scoped, synchronized across consoles, persisted, and automatically expire.
+
+Validation:
+- 213 automated tests passed.
+- Python compilation passed for all application and test modules.
+- JavaScript syntax passed for the main application and all frontend modules.
+- Runtime smoke test passed for /, /health, /api/version, and the pre-scramble deny endpoint.
+- Root cache and browser safety headers were verified.
+- External VATSIM DNS was unavailable in the local smoke environment, so /health correctly reported degraded rather than falsely reporting live status.

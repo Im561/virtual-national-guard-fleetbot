@@ -1,0 +1,270 @@
+[
+  {
+    "icao": "KLSV",
+    "name": "Nellis Air Force Base",
+    "lat": 36.2362,
+    "lon": -115.0343,
+    "aircraft": [
+      "F22"
+    ],
+    "unit": "73rd Fighter Reserve Squadron",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KLFI",
+    "name": "Langley Air Force Base",
+    "lat": 37.0829,
+    "lon": -76.3605,
+    "aircraft": [
+      "F22"
+    ],
+    "unit": "149th Fighter Squadron / 192nd Fighter Wing",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KPDX",
+    "name": "Portland International Airport",
+    "lat": 45.5887,
+    "lon": -122.5975,
+    "aircraft": [
+      "F22"
+    ],
+    "unit": "199th Fighter Squadron / 154th Wing",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "PHNL",
+    "name": "Daniel K. Inouye International Airport",
+    "lat": 21.3187,
+    "lon": -157.9225,
+    "aircraft": [
+      "F22"
+    ],
+    "unit": "199th Fighter Squadron / 154th Wing",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KJAX",
+    "name": "Jacksonville International Airport",
+    "lat": 30.4941,
+    "lon": -81.6879,
+    "aircraft": [
+      "F35"
+    ],
+    "unit": "159th Fighter Squadron",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KNBG",
+    "name": "NAS JRB New Orleans",
+    "lat": 29.8253,
+    "lon": -90.035,
+    "aircraft": [
+      "F15"
+    ],
+    "unit": "159th Fighter Wing",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KFAT",
+    "name": "Fresno Yosemite International Airport",
+    "lat": 36.7762,
+    "lon": -119.7181,
+    "aircraft": [
+      "F15"
+    ],
+    "unit": "194th Fighter Squadron",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KBKF",
+    "name": "Buckley Space Force Base",
+    "lat": 39.7017,
+    "lon": -104.7517,
+    "aircraft": [
+      "F16"
+    ],
+    "unit": "140th Wing / 120th Fighter Squadron",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KOZR",
+    "name": "Cairns Army Airfield",
+    "lat": 31.2757,
+    "lon": -85.7134,
+    "aircraft": [
+      "F16"
+    ],
+    "unit": "140th Wing / 120th Fighter Squadron",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYOD",
+    "name": "CFB Cold Lake",
+    "lat": 54.404999,
+    "lon": -110.278999,
+    "aircraft": [
+      "F18H",
+      "F35"
+    ],
+    "unit": "RCAF Primary QRA Base \u00b7 NORAD",
+    "country": "CANADA",
+    "qra_role": "PRIMARY",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYBG",
+    "name": "CFB Bagotville",
+    "lat": 48.330123,
+    "lon": -70.992012,
+    "aircraft": [
+      "F18H",
+      "F35"
+    ],
+    "unit": "RCAF Primary QRA Base \u00b7 NORAD",
+    "country": "CANADA",
+    "qra_role": "PRIMARY",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYEV",
+    "name": "FOL Inuvik",
+    "lat": 68.304199,
+    "lon": -133.483002,
+    "aircraft": [
+      "F18H"
+    ],
+    "unit": "RCAF NORAD Forward Operating Location",
+    "country": "CANADA",
+    "qra_role": "FOL",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYZF",
+    "name": "FOL Yellowknife",
+    "lat": 62.462799,
+    "lon": -114.440002,
+    "aircraft": [
+      "F18H"
+    ],
+    "unit": "RCAF NORAD Forward Operating Location",
+    "country": "CANADA",
+    "qra_role": "FOL",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYFB",
+    "name": "FOL Iqaluit",
+    "lat": 63.756402,
+    "lon": -68.555801,
+    "aircraft": [
+      "F18H"
+    ],
+    "unit": "RCAF NORAD Forward Operating Location",
+    "country": "CANADA",
+    "qra_role": "FOL",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "CYRT",
+    "name": "FOL Rankin Inlet",
+    "lat": 62.811401,
+    "lon": -92.115799,
+    "aircraft": [
+      "F18H"
+    ],
+    "unit": "RCAF NORAD Forward Operating Location",
+    "country": "CANADA",
+    "qra_role": "FOL",
+    "scramble_enabled": true
+  },
+  {
+    "icao": "KSZL",
+    "name": "Whiteman Air Force Base",
+    "lat": 38.7303,
+    "lon": -93.5482,
+    "aircraft": [
+      "B2"
+    ],
+    "unit": "Bomber unit \u2014 excluded from alert scramble",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KSVR",
+    "name": "South Valley Regional Airport",
+    "lat": 40.6195,
+    "lon": -111.9929,
+    "aircraft": [
+      "H64"
+    ],
+    "unit": "1st Battalion 211th Aviation Regiment",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KSLI",
+    "name": "Los Alamitos Army Airfield",
+    "lat": 33.79,
+    "lon": -118.052,
+    "aircraft": [
+      "H60"
+    ],
+    "unit": "1-140th Aviation Regiment",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KADW",
+    "name": "Joint Base Andrews",
+    "lat": 38.8108,
+    "lon": -76.867,
+    "aircraft": [
+      "B737",
+      "UH1"
+    ],
+    "unit": "201st Airlift Squadron / 316th Operations Group",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KCYS",
+    "name": "Cheyenne Regional Airport",
+    "lat": 41.1557,
+    "lon": -104.8118,
+    "aircraft": [
+      "C130"
+    ],
+    "unit": "153rd Airlift Wing",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KXTA",
+    "name": "Homey Airport",
+    "lat": 37.235,
+    "lon": -115.8111,
+    "aircraft": [
+      "H60"
+    ],
+    "unit": "Air Force Test Center, Detachment 3",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KPIT",
+    "name": "Pittsburgh International Airport",
+    "lat": 40.4915,
+    "lon": -80.2329,
+    "aircraft": [
+      "C17"
+    ],
+    "unit": "758th Airlift Squadron",
+    "scramble_enabled": false
+  },
+  {
+    "icao": "KJST",
+    "name": "John Murtha Johnstown-Cambria County Airport",
+    "lat": 40.3161,
+    "lon": -78.8339,
+    "aircraft": [
+      "H60/H47/H72"
+    ],
+    "unit": "28th Expeditionary Combat Aviation Brigade",
+    "scramble_enabled": false
+  }
+]
