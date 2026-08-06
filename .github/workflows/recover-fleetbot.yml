@@ -1,6 +1,7 @@
 name: Recover Fleet Bot repository
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - main
