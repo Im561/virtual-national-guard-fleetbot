@@ -1,0 +1,36 @@
+name: Recover Fleet Bot repository
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/recover-fleetbot.yml"
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Restore last known good tree
+        shell: bash
+        env:
+          GOOD_COMMIT: 719758494c1d74ba52375b6cfabc995c288a65b9
+        run: |
+          set -euo pipefail
+          current_commit="$(git rev-parse HEAD)"
+          good_tree="$(git rev-parse "${GOOD_COMMIT}^{tree}")"
+          recovery_commit="$(
+            printf '%s\n' 'Restore Fleet Bot repository to last known good snapshot' |
+              git -c user.name='github-actions[bot]' \
+                  -c user.email='41898282+github-actions[bot]@users.noreply.github.com' \
+                  commit-tree "$good_tree" -p "$current_commit"
+          )"
+          git push origin "${recovery_commit}:refs/heads/main"
