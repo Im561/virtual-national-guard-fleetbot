@@ -1,43 +1,50 @@
 # Virtual National Guard Fleet Discord Bot
 
-## Version 1.0.1
-
-- Corrected phpVMS pagination handling for fleet and airline endpoints.
-- Page numbers are now tracked with their query parameters, preventing false
-  `pagination loop detected` errors.
+## Version 1.1.0
 
 Railway-ready Discord bot that reads Virtual National Guard aircraft locations from the phpVMS API.
 
+### What is new
+
+- `/fleet` interactive dashboard with Airport, Aircraft, Type, Wing, and Fleet Status buttons.
+- Search buttons open Discord forms; users no longer need to remember every command option.
+- Previous and Next buttons paginate long fleet results instead of silently cutting them off.
+- User-specific controls prevent another member from changing someone else's result page.
+- Automatic phpVMS retries with exponential backoff for timeouts, rate limits, and server errors.
+- Last-known-good fleet data remains available as clearly marked `STALE DATA` when phpVMS is unavailable.
+- Optional disk persistence restores the last-known-good cache after a Railway restart.
+- Background refresh and expanded `/health` diagnostics.
+- Command cooldowns protect the phpVMS API.
+- `/refresh` and `/apistatus` both require Discord **Manage Server** permission.
+- The original single-file implementation is split into maintainable modules with regression tests.
+
 ## Commands
 
+- `/fleet` — open the interactive button dashboard.
 - `/location airport:KLFI` — aircraft currently at an airport, grouped by wing.
 - `/airframe query:04-4071` — find an aircraft by registration, tail number, or name.
 - `/type aircraft:F22` — show every matching aircraft type and its current airport.
 - `/wing wing:192nd` — show aircraft assigned to a wing, grouped by airport.
-- `/fleetstatus` — fleet totals and the most populated locations/types.
+- `/fleetstatus` — fleet totals, locations, aircraft groups, and data state.
 - `/refresh` — staff-only forced phpVMS refresh.
-- `/apistatus` — test the API and report the number of aircraft loaded.
+- `/apistatus` — staff-only API and cache health check.
 - `/fleethelp` — command guide.
 
-## 1. Discord setup
+Long result sets display one page at a time with **Previous** and **Next** controls.
+
+## Discord setup
 
 1. Open the Discord Developer Portal.
 2. Create or select the application.
-3. Open **Bot**, create the bot, and reset/copy its token.
-4. Under installation/OAuth scopes, enable:
-   - `bot`
-   - `applications.commands`
-5. Give it these permissions:
-   - View Channels
-   - Send Messages
-   - Embed Links
-   - Use Application Commands
-6. Invite it to the Virtual National Guard server.
-7. In Discord, enable **Developer Mode**, then right-click the server and copy its Server ID.
+3. Open **Bot**, create the bot, and copy its token.
+4. Under installation/OAuth scopes, enable `bot` and `applications.commands`.
+5. Grant View Channels, Send Messages, Embed Links, and Use Application Commands.
+6. Invite the bot to the Virtual National Guard server.
+7. Enable Discord Developer Mode, right-click the server, and copy its Server ID.
 
-Do not place the bot token in this repository.
+Never place the bot token in this repository.
 
-## 2. phpVMS setup
+## phpVMS setup
 
 A phpVMS user API key is required. The bot sends it in the `X-API-Key` request header.
 
@@ -47,71 +54,63 @@ Required endpoint access:
 - `/api/airlines`
 - `/api/airports/{ICAO}`
 
-Use a dedicated service/bot account where possible. Do not post the API key in Discord or commit it to GitHub.
+Use a dedicated service account when possible. Never post the key in Discord or commit it to GitHub.
 
-## 3. Deploy on Railway
-
-### GitHub method
-
-1. Create a new GitHub repository.
-2. Upload every file from this project except `.env`.
-3. In Railway, create a project and choose **Deploy from GitHub repo**.
-4. Select the repository.
-5. Open the Railway service's **Variables** tab and add:
+## Railway variables
 
 ```env
 DISCORD_TOKEN=your_discord_bot_token
-DISCORD_GUILD_ID=1526321807580463114
-DISCORD_APPLICATION_ID=1533637941275001022
+DISCORD_GUILD_ID=your_discord_server_id
 PHPVMS_BASE_URL=https://virtualnationalguard.com
 PHPVMS_API_KEY=your_phpvms_api_key
 CACHE_TTL_SECONDS=300
+BACKGROUND_REFRESH_SECONDS=60
+STATE_FILE_PATH=/app/data/fleetbot-state.json
 LOG_LEVEL=INFO
 ```
 
-6. Deploy the staged changes.
-7. Under **Settings → Networking**, generate a public domain.
-8. The included `railway.json` configures `/health` as the deployment healthcheck.
+`STATE_FILE_PATH` is optional. For persistence across deployments, attach a Railway volume at `/app/data`. Without a volume, the bot still works, but the saved cache disappears when Railway replaces the container.
 
-The bot web server binds to Railway's injected `PORT` on `0.0.0.0`.
+The web server binds to Railway's injected `PORT` on `0.0.0.0`. The included `railway.json` checks `/health`.
 
-## 4. First test
+## Health states
 
-Check the Railway logs for:
+- `LIVE DATA` — the current request refreshed phpVMS successfully.
+- `CACHED DATA` — the bot served a recent in-memory snapshot.
+- `STALE DATA` — live refresh failed and the bot safely served its last-known-good snapshot.
+- `NO DATA` — phpVMS has not succeeded and no persistent cache exists.
+
+`/health` reports Discord readiness, fleet data state, cache age, refresh timestamps, API latency, and the last safe API error.
+
+## First test
+
+After Railway deploys, check its logs for successful command synchronization and then run:
 
 ```text
-Logged in as ...
-Synced ... guild commands
-Health server listening ...
-```
-
-Then run:
-
-```text
+/fleet
 /apistatus
 /location airport:KLFI
+```
+
+## Local checks
+
+```text
+python -m unittest discover -s tests -v
+python -m compileall bot.py fleetbot tests
 ```
 
 ## Troubleshooting
 
 ### Commands do not appear
 
-- Confirm `DISCORD_GUILD_ID` is the correct server ID.
-- Confirm the bot was invited with both `bot` and `applications.commands`.
-- Restart/redeploy the Railway service.
+- Confirm `DISCORD_GUILD_ID` is correct.
+- Confirm the bot was invited with `bot` and `applications.commands` scopes.
+- Restart the Railway deployment.
 
-### HTTP 401 from phpVMS
+### HTTP 401 or 403
 
-The API key is missing, expired, or incorrect. Regenerate the key and replace `PHPVMS_API_KEY` in Railway.
+The API key is invalid, expired, or lacks access to a required phpVMS endpoint. Replace the key in Railway and redeploy.
 
-### HTTP 403 from phpVMS
+### Results show STALE DATA
 
-The phpVMS account does not have access to the fleet, airlines, or airport API endpoint.
-
-### `/location` returns no aircraft
-
-The bot reports the current `airport_id` stored on each phpVMS aircraft record. Confirm that the website has an aircraft assigned to that airport, then run `/refresh`.
-
-### Wing names are wrong
-
-The bot maps each fleet subfleet's `airline_id` to `/api/airlines`. If the fighter wings are represented differently in the customized Virtual National Guard installation, run `/apistatus` and inspect the logs. The parser can then be adjusted to the site's custom fields.
+The bot retained its last successful fleet snapshot because phpVMS could not be refreshed. Staff can use `/apistatus` for the safe error summary and check Railway logs for detailed diagnostics.
