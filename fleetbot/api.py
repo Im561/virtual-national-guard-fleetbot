@@ -76,7 +76,7 @@ class PhpVmsClient:
                     "X-API-Key": self.api_key,
                     "Accept": "application/json",
                     "Content-Type": "application/json",
-                    "User-Agent": "VirtualNationalGuard-FleetBot/1.1.0",
+                    "User-Agent": "VirtualNationalGuard-FleetBot/1.1.1",
                 },
             )
 
@@ -324,12 +324,20 @@ class PhpVmsClient:
 
     async def get_fleet(self, *, force: bool = False) -> FleetSnapshot:
         if not force and self._snapshot is not None:
-            if not self._snapshot.stale and self._snapshot.age_seconds < self.cache_ttl:
+            # Commands should never wait through repeated API retries when a
+            # last-known-good snapshot is already available. The background
+            # refresh loop and staff commands use force=True to recover live
+            # data independently.
+            if self._snapshot.stale:
+                return self._snapshot
+            if self._snapshot.age_seconds < self.cache_ttl:
                 return self._snapshot.as_cached()
 
         async with self._cache_lock:
             if not force and self._snapshot is not None:
-                if not self._snapshot.stale and self._snapshot.age_seconds < self.cache_ttl:
+                if self._snapshot.stale:
+                    return self._snapshot
+                if self._snapshot.age_seconds < self.cache_ttl:
                     return self._snapshot.as_cached()
 
             self.last_refresh_attempt_at = datetime.now(timezone.utc)

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from collections.abc import Awaitable, Callable
 from datetime import datetime, timezone
+import logging
 
 import discord
 
@@ -12,6 +13,24 @@ SearchHandler = Callable[
     [discord.Interaction, str, str | None, bool],
     Awaitable[None],
 ]
+
+
+log = logging.getLogger("vng-fleet-bot.presentation")
+
+
+async def send_ui_error(
+    interaction: discord.Interaction,
+    error: Exception,
+) -> None:
+    log.exception("Fleet dashboard interaction failed", exc_info=error)
+    message = "That fleet control could not finish. Please try the command again."
+    try:
+        if interaction.response.is_done():
+            await interaction.followup.send(message, ephemeral=True)
+        else:
+            await interaction.response.send_message(message, ephemeral=True)
+    except discord.HTTPException:
+        log.exception("Could not send the fleet dashboard error response")
 
 
 def make_base_embed(title: str, description: str | None = None) -> discord.Embed:
@@ -106,6 +125,14 @@ class EmbedPaginator(discord.ui.View):
             ephemeral=True,
         )
         return False
+
+    async def on_error(
+        self,
+        interaction: discord.Interaction,
+        error: Exception,
+        _item: discord.ui.Item,
+    ) -> None:
+        await send_ui_error(interaction, error)
 
     async def _show_page(self, interaction: discord.Interaction) -> None:
         self._refresh_buttons()
@@ -211,6 +238,13 @@ class FleetSearchModal(discord.ui.Modal):
             True,
         )
 
+    async def on_error(
+        self,
+        interaction: discord.Interaction,
+        error: Exception,
+    ) -> None:
+        await send_ui_error(interaction, error)
+
 
 class FleetDashboard(discord.ui.View):
     def __init__(self, owner_id: int, handler: SearchHandler) -> None:
@@ -226,6 +260,14 @@ class FleetDashboard(discord.ui.View):
             ephemeral=True,
         )
         return False
+
+    async def on_error(
+        self,
+        interaction: discord.Interaction,
+        error: Exception,
+        _item: discord.ui.Item,
+    ) -> None:
+        await send_ui_error(interaction, error)
 
     async def _open_search(
         self,

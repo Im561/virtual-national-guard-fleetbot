@@ -1,10 +1,14 @@
 # Virtual National Guard Fleet Discord Bot
 
-## Version 1.1.0
+## Version 1.1.1
 
 Railway-ready Discord bot that reads Virtual National Guard aircraft locations from the phpVMS API.
 
 ### What is new
+
+- Hotfix: user commands return last-known-good data immediately instead of waiting through background API retries.
+- Hotfix: `/location` still works when the optional airport-detail endpoint is slow or unavailable.
+- Hotfix: dashboard, modal, and pagination errors now clear Discord's loading state with a useful response.
 
 - `/fleet` interactive dashboard with Airport, Aircraft, Type, Wing, and Fleet Status buttons.
 - Search buttons open Discord forms; users no longer need to remember every command option.

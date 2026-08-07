@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 import time
 from collections import Counter, defaultdict
 from typing import TYPE_CHECKING
@@ -11,6 +12,7 @@ from discord import app_commands
 from .domain import (
     Aircraft,
     FleetSnapshot,
+    PhpVmsApiError,
     batches,
     clean,
     exact_or_partial,
@@ -30,6 +32,11 @@ from .presentation import (
 
 if TYPE_CHECKING:
     from .app import FleetBot
+
+
+log = logging.getLogger("vng-fleet-bot.commands")
+AIRPORT_LOOKUP_TIMEOUT_SECONDS = 5.0
+COMMAND_TIMEOUT_SECONDS = 30.0
 
 
 def user_cooldown_key(interaction: discord.Interaction) -> tuple[int | None, int]:
@@ -52,10 +59,17 @@ async def build_location_pages(bot: FleetBot, query: str) -> list[discord.Embed]
             )
         ]
 
-    snapshot, airport_info = await asyncio.gather(
-        bot.api.get_fleet(),
-        bot.api.get_airport(icao),
-    )
+    snapshot = await bot.api.get_fleet()
+    airport_info = None
+    try:
+        airport_info = await asyncio.wait_for(
+            bot.api.get_airport(icao),
+            timeout=AIRPORT_LOOKUP_TIMEOUT_SECONDS,
+        )
+    except Exception as exc:
+        # The airport name is decorative. A slow or customized airport-detail
+        # endpoint must not prevent the actual fleet-location result.
+        log.warning("Airport detail lookup failed for %s: %s", icao, exc)
     matches = [item for item in snapshot.aircraft if item.airport_id == icao]
     airport_name = clean(airport_info.get("name")) if airport_info else ""
     description = (
@@ -283,11 +297,21 @@ async def run_action(
         "type": build_type_pages,
         "wing": build_wing_pages,
     }
-    if action == "status":
-        pages = await build_status_pages(bot)
-    else:
+    async def build_pages() -> list[discord.Embed]:
+        if action == "status":
+            return await build_status_pages(bot)
         builder = builders[action]
-        pages = await builder(bot, query or "")
+        return await builder(bot, query or "")
+
+    try:
+        pages = await asyncio.wait_for(
+            build_pages(),
+            timeout=COMMAND_TIMEOUT_SECONDS,
+        )
+    except TimeoutError as exc:
+        raise PhpVmsApiError(
+            "Fleet data took too long to respond. Please try again in a moment."
+        ) from exc
     await send_pages(interaction, pages, ephemeral=ephemeral)
 
 
