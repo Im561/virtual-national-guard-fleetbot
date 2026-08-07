@@ -147,7 +147,10 @@ class FleetBot(commands.Bot):
     @tasks.loop(seconds=60)
     async def background_refresh(self) -> None:
         try:
-            snapshot = await self.api.get_fleet()
+            # Force only the background worker to contact phpVMS. User
+            # commands can immediately use last-known-good data while a live
+            # recovery attempt runs here.
+            snapshot = await self.api.get_fleet(force=True)
         except PhpVmsApiError as exc:
             log.error("Background fleet refresh failed: %s", exc)
         else:
@@ -221,7 +224,14 @@ async def main() -> None:
         interaction: discord.Interaction,
         error: app_commands.AppCommandError,
     ) -> None:
-        original = getattr(error, "original", error)
+        original: BaseException = error
+        seen: set[int] = set()
+        while id(original) not in seen:
+            seen.add(id(original))
+            nested = getattr(original, "original", None)
+            if not isinstance(nested, BaseException):
+                break
+            original = nested
         if isinstance(error, app_commands.CommandOnCooldown):
             message = (
                 "That command is cooling down. Try again in "
